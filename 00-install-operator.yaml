@@ -9,3 +9,8 @@ spec:
   name: openshift-gitops-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  # channel: alpha
+  # installPlanApproval: Automatic
+  # name: argocd-operator
+  # source: community-operators
+  # sourceNamespace: openshift-marketplace

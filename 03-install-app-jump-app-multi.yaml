@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: jump-app-multi
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - namespace: jump-app-dev-0
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-1
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-2
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-3
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-4
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-5
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-6
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-7
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-8
+        cluster: https://kubernetes.default.svc
+      - namespace: jump-app-dev-9
+        cluster: https://kubernetes.default.svc
+  template:
+    metadata:
+      name: '{{namespace}}'
+    spec:
+      destination:
+        namespace: '{{namespace}}'
+        server: '{{cluster}}'
+      source:
+        path: .
+        repoURL: 'https://github.com/acidonper/jump-app-gitops.git'
+        targetRevision: 'feature/jump-app-dev'
+        helm:
+          valueFiles:
+            - values-quay.yaml
+      project: default
+      syncPolicy:
+        automated:
+          prune: false
+          selfHeal: false

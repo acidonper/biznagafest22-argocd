@@ -43,9 +43,10 @@ gitops-operator-controller-manager-85ccf6bc77-s846l   1/1     Running   2       
 
 ### Install ArgoCD Server
 
-After the ArgoCD operator has been installed, it is time to install ArgoCD itself. It is required to execute the following command to apply the YAML file definition in Openshift in order to give the ArgoCD Operator the definition required to deploy de ArgoCD Server. 
+After the ArgoCD operator has been installed, it is time to install ArgoCD itself. It is required to execute the following command to apply the YAML file definition in Openshift in order to give the ArgoCD Operator the definition required to deploy de ArgoCD Server.
 
 ```$bash
+oc new-project argocd
 oc apply -f 01-install-argocd.yaml
 ```
 
@@ -68,6 +69,8 @@ Finally, it is required to configure a new ArgoCD Application in order to create
 The following command applies the YAML file definition in order to give the ArgoCD Server the definition required to deoloy the application in Openshift. 
 
 ```$bash
+oc new-project jump-app-dev
+oc label namespace jump-app-dev argocd.argoproj.io/managed-by=argocd --overwrite
 oc apply -f 02-install-app-jump-app.yaml
 ```
 
@@ -75,6 +78,30 @@ After few minutes, ArgoCD has created a set of object that represent the _Jump A
 
 ```$bash
 oc get pod -n argocd
+NAME                                  READY   STATUS    RESTARTS   AGE
+back-golang-v1-7599559bc-scgq6        1/1     Running   0          4m28s
+back-python-v1-7cc5d84585-jlwjv       1/1     Running   0          4m28s
+back-quarkus-v1-77cdcbd89-d67st       1/1     Running   0          4m28s
+back-springboot-v1-7bc5cc4b45-r6zzz   1/1     Running   0          4m28s
+front-javascript-v1-598cb94bf-9m2px   1/1     Running   0          4m28s
+mongo-547c99d7c4-wvgqb                1/1     Running   0          4m28s
+```
+
+## Deploy multiple Jump App via an ArgoCD ApplicationSet
+
+For creating multiple Jum App applications is recommended make use of *ApplicationSet*. This object allows customer to create multiple new ArgoCD Applications in order to create all required objects to deploy the final applications.
+
+The following command applies the YAML file definition in order to give the ArgoCD Server the definition required to deploy the multiple applications in Openshift.
+
+```$bash
+for i in {0..9};do oc new-project jump-app-dev-$i && oc label namespace jump-app-dev-$i argocd.argoproj.io/managed-by=argocd --overwrite ;done
+oc apply -f 03-install-app-jump-app-multi.yaml
+```
+
+After few minutes, ArgoCD has created a set of object that represent the _Jump App_ microservices. The following command illustrates this scenoary:
+
+```$bash
+oc get pod -n jump-app-dev-1
 NAME                                  READY   STATUS    RESTARTS   AGE
 back-golang-v1-7599559bc-scgq6        1/1     Running   0          4m28s
 back-python-v1-7cc5d84585-jlwjv       1/1     Running   0          4m28s
@@ -97,7 +124,6 @@ front-javascript-v1   front-javascript-v1-argocd.apps-crc.testing          front
 ```
 
 - Visit the frontend URL (E.g. front-javascript-argocd.apps-crc.testing)
-
 
 ## Interesting Links
 

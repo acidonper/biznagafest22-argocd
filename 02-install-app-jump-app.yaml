@@ -3,17 +3,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jump-app
+  name: jump-app-dev
   namespace: argocd
 spec:
   destination:
     name: ''
-    namespace: argocd
+    namespace: jump-app-dev
     server: 'https://kubernetes.default.svc'
   source:
     path: .
     repoURL: 'https://github.com/acidonper/jump-app-gitops.git'
     targetRevision: 'feature/jump-app-dev'
+    helm:
+      valueFiles:
+        - values-quay.yaml
   project: default
   syncPolicy:
     automated:
