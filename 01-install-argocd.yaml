@@ -15,3 +15,4 @@ spec:
     scopes: '[groups]'
   dex:
     openShiftOAuth: true
+  applicationSet: {}
