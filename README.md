@@ -87,6 +87,20 @@ front-javascript-v1-598cb94bf-9m2px   1/1     Running   0          4m28s
 mongo-547c99d7c4-wvgqb                1/1     Running   0          4m28s
 ```
 
+### Testing Jump App
+
+Once the _Jump App_ pods are _Running_, it is time to check application frontend access via browser. It is required to follow the next steps:
+
+- Obtain _Jump App_ frontend URL
+
+```$bash
+oc get route -n argocd | grep front
+front-javascript      front-javascript-argocd.apps-crc.testing             front-javascript-v1   http-8080   edge/Redirect          None
+front-javascript-v1   front-javascript-v1-argocd.apps-crc.testing          front-javascript-v1   http-8080   edge/Redirect          None
+```
+
+- Visit the frontend URL (E.g. front-javascript-argocd.apps-crc.testing)
+
 ## Deploy multiple Jump App via an ArgoCD ApplicationSet
 
 For creating multiple Jum App applications is recommended make use of *ApplicationSet*. This object allows customer to create multiple new ArgoCD Applications in order to create all required objects to deploy the final applications.
@@ -111,19 +125,29 @@ front-javascript-v1-598cb94bf-9m2px   1/1     Running   0          4m28s
 mongo-547c99d7c4-wvgqb                1/1     Running   0          4m28s
 ```
 
-### Testing Jump App
+### Testing multiple applications
 
-Once the _Jump App_ pods are _Running_, it is time to check application frontend access via browser. It is required to follow the next steps:
-
-- Obtain _Jump App_ frontend URL
+Once the multiple _Jump App_ applications are _Running_, it is time to check applications automatically using the following command: 
 
 ```$bash
-oc get route -n argocd | grep front
-front-javascript      front-javascript-argocd.apps-crc.testing             front-javascript-v1   http-8080   edge/Redirect          None
-front-javascript-v1   front-javascript-v1-argocd.apps-crc.testing          front-javascript-v1   http-8080   edge/Redirect          None
-```
+scripts/report.sh
 
-- Visit the frontend URL (E.g. front-javascript-argocd.apps-crc.testing)
+...
+## Application 9 
+Testing Golang App in namespace jump-app-dev-9 (back-golang-v1-jump-app-dev-9.apps.biznagafest.sandbox1207.opentlc.com)
+/ - Greetings from Golang!
+
+#############
+## SUMMARY ##
+#############
+
+Applications: 10
+Namespaces: 10
+Deployments: 50
+Services: 50
+Routes: 40
+Pods: 50
+```
 
 ## Interesting Links
 
